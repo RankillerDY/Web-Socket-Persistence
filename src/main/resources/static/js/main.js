@@ -56,7 +56,7 @@ async function findAndDisplayConnectedUser() {
     connectedUsers.forEach(user => {
         appendUserELement(user, connectedUserList);
         if(connectedUsers.index(user) < connectedUsers.length - 1) {
-            //if the user haven't reach the last element
+            //if the user haven't reached the last element
             //add a separator
             const separator = document.createElement('li');
             separator.classList.add('separator');
@@ -66,7 +66,30 @@ async function findAndDisplayConnectedUser() {
 }
 
 function appendUserELement(user, connectedUserList) {
+    //Create a space to tell new user participate
+    const listItem = document.createElement('li');
+    listItem.classList.add('user-item');
+    listItem.id = user.nickname;
 
+    //User picture
+    const userImage = document.createElement('img');
+    userImage.src = '../img/user_icon.png';
+    userImage.alt = user.fullname;
+
+    //User full name
+    const usernameSpan = document.createElement('span');
+    usernameSpan.textContent = user.fullname;
+
+    //Alert user when new message come
+    const receivedMsgs = document.createElement('span');
+    receivedMsgs.textContent = '0';
+    receivedMsgs.classList.add('nbr-msg', 'hidden');
+
+    listItem.appendChild(userImage);
+    listItem.appendChild(usernameSpan);
+    listItem.appendChild(receivedMsgs);
+
+    connectedUserList.appendChild(listItem);
 }
 
 function onError() {
