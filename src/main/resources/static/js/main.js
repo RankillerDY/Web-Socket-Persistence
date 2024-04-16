@@ -42,6 +42,30 @@ function onConnected() {
             status: 'ONLINE'
         }))
     //find and display the connected user
+    findAndDisplayConnectedUser().then();
+}
+
+async function findAndDisplayConnectedUser() {
+    const connectedUserResponse = await fetch("/users");
+    let connectedUsers = await connectedUserResponse.json();
+    //Filter a connected user out of the list of connectedUsers in chat room
+    connectedUsers = connectedUsers.filter(user => user.nickname !== nickname);
+    const connectedUserList = document.getElementById('connectedUsers');
+    connectedUserList.innerHTML = '';
+
+    connectedUsers.forEach(user => {
+        appendUserELement(user, connectedUserList);
+        if(connectedUsers.index(user) < connectedUsers.length - 1) {
+            //if the user haven't reach the last element
+            //add a separator
+            const separator = document.createElement('li');
+            separator.classList.add('separator');
+            connectedUserList.appendChild(separator);
+        }
+    })
+}
+
+function appendUserELement(user, connectedUserList) {
 
 }
 
