@@ -117,6 +117,21 @@ async function fetchAndDisplayUserChat() {
     userChat.forEach(chat => {
         displayChatMessage(chat.senderId, chat.content);
     })
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function displayChatMessage(senderId, content) {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message');
+    if(senderId === nickname) {
+        messageContainer.classList.add('sender');
+    } else {
+        messageContainer.classList.add('receiver');
+    }
+    const message = document.createElement('p');
+    message.textContent = content;
+    messageContainer.appendChild(messageContainer);
+    chatArea.appendChild(messageContainer);
 }
 
 function onError() {
