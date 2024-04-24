@@ -26,6 +26,7 @@ function connect(event) {
 
         stompClient.connect({}, onConnected, onError)
     }
+    document.querySelector('#connected-user-fullname').textContent = fullname;
     event.preventDefault();
 }
 
@@ -177,5 +178,18 @@ async function onMessageReceived(payload) {
     }
 }
 
+function onLogout() {
+    stompClient.send('/app/user.disconnectUser', {},
+        JSON.stringify({
+        nickname: nickname,
+        fullname: fullname,
+        status: 'OFFLINE'
+    }));
+    window.location.reload();
+}
+
 usernameForm.addEventListener('submit', connect, true);
 messageForm.addEventListener('submit', sendMessage, true);
+logout.addEventListener('click', onLogout, true);
+
+window.onbeforeunload = () => onLogout();
