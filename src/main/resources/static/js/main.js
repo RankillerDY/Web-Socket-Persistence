@@ -34,7 +34,7 @@ function onConnected() {
     stompClient.subscribe(`/user/public`, onMessageReceived);
 
     //register the connected user
-    stompClient.send('app/user.addUser',
+    stompClient.send('/app/user.addUser',
         {},
         JSON.stringify({
             nickname: nickname,
@@ -89,7 +89,34 @@ function appendUserELement(user, connectedUserList) {
     listItem.appendChild(usernameSpan);
     listItem.appendChild(receivedMsgs);
 
+    listItem.addEventListener('click', userItemClick)
+
     connectedUserList.appendChild(listItem);
+}
+
+function userItemClick(event) {
+    document.querySelectorAll('.user-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    messageForm.classList.remove('hidden');
+
+    const clickedUser = event.currentTarget;
+    clickedUser.classList.add('active');
+
+    selectedUserId = clickedUser.getAttribute('id');
+    fetchAndDisplayUserChat().then();
+
+    const nbrMsg = clickedUser.querySelector('.nbr-msg');
+    nbr.classList.add('hidden');
+}
+
+async function fetchAndDisplayUserChat() {
+    const userChatResponse = await fetch(`/messages/${nickname}/${selectedUserId}`);
+    const userChat = await userChatResponse.json();
+    chatArea.innerHTML = '';
+    userChat.forEach(chat => {
+        displayChatMessage(chat.senderId, chat.content);
+    })
 }
 
 function onError() {
