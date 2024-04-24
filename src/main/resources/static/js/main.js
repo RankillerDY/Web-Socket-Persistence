@@ -134,6 +134,22 @@ function displayChatMessage(senderId, content) {
     chatArea.appendChild(messageContainer);
 }
 
+function sendMessage(event) {
+    const messageContent = messageInput.value.trim();
+    if(messageContent && stompClient) {
+        const chatMessage = {
+            senderId: nickname,
+            recipientId: selectedUserId,
+            content: messageContent,
+            timestamp: new Date()
+        };
+        stompClient.send('/app/chat', {}, JSON.stringify(chatMessage));
+        displayChatMessage(nickname, messageContent);
+    }
+    event.preventDefault();
+}
+
+
 function onError() {
 
 }
@@ -141,4 +157,6 @@ function onError() {
 function onMessageReceived() {
 
 }
+
 usernameForm.addEventListener('submit', connect, true);
+messageForm.addEventListener('submit', sendMessage, true);

@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
-    private final ChatMessageRepository repository;
+    private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
 
     public ChatMessage save(ChatMessage chatMessage) {
@@ -20,7 +20,7 @@ public class ChatMessageService {
                 true
         ).orElseThrow();
         chatMessage.setChatId(chatId);
-        return repository.save(chatMessage);
+        return chatMessageRepository.save(chatMessage);
     }
 
     public List<ChatMessage> findChatMessages(
@@ -31,6 +31,6 @@ public class ChatMessageService {
                 recipientId,
                 false
         );
-        return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
+        return chatId.map(chatMessageRepository::findByChatId).orElse(new ArrayList<>());
     }
 }
