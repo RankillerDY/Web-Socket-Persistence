@@ -73,7 +73,7 @@ function appendUserELement(user, connectedUserList) {
 
     //User picture
     const userImage = document.createElement('img');
-    userImage.src = '../img/user_icon.png';
+    userImage.src = '../img/images.jpg';
     userImage.alt = user.fullname;
 
     //User full name
@@ -107,7 +107,7 @@ function userItemClick(event) {
     fetchAndDisplayUserChat().then();
 
     const nbrMsg = clickedUser.querySelector('.nbr-msg');
-    nbr.classList.add('hidden');
+    nbrMsg.classList.add('hidden');
 }
 
 async function fetchAndDisplayUserChat() {
@@ -154,8 +154,27 @@ function onError() {
 
 }
 
-function onMessageReceived() {
+async function onMessageReceived(payload) {
+    await findAndDisplayConnectedUser();
 
+    const message = JSON.parse(payload.body);
+    if(selectedUserId && selectedUserId === message.senderId) {
+        displayChatMessage(message.senderId, message.content);
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    if(selectedUserId) {
+        document.querySelector(`#${selectedUserId}`).classList.add("active");
+    } else {
+        messageForm.classList.add('hidden');
+    }
+
+    const notifiedUser = document.querySelector(`#${message.senderId}`);
+    if(notifiedUser && !notifiedUser.classList.contains('active')) {
+        const nbrMsg = notifiedUser.querySelector('.nbr-msg');
+        nbrMsg.classList.remove('hidden');
+        nbrMsg.textContent = '';
+    }
 }
 
 usernameForm.addEventListener('submit', connect, true);
